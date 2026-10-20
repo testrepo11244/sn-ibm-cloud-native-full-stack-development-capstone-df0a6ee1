@@ -1,154 +1,144 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import "./Register.css";
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import './Register.css';
 
 const Register = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    username: "",
-    first_name: "",
-    last_name: "",
-    email: "",
-    password: "",
+    username: '',
+    first_name: '',
+    last_name: '',
+    email: '',
+    password: ''
   });
 
-  const [error, setError] = useState("");
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const { username, first_name, last_name, email, password } = formData;
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
 
-  const onChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-
-  const onSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-
-    if (!username || !first_name || !last_name || !email || !password) {
-      setError("All fields are required.");
-      return;
-    }
+    setErrorMessage('');
 
     try {
-      const form = new FormData();
-      form.append("username", username);
-      form.append("first_name", first_name);
-      form.append("last_name", last_name);
-      form.append("email", email);
-      form.append("password", password);
-
       const response = await fetch(
-        "http://localhost:8000/djangoapp/register",
+        'http://localhost:8000/djangoapp/register',
         {
-          method: "POST",
-          body: form,
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
         }
       );
 
-      if (response.ok) {
-        const data = await response.json();
-        if (data.status === "authenticated") {
-          sessionStorage.setItem("username", data.username);
-          sessionStorage.setItem("isAuthenticated", true);
-          navigate("/");
-        } else {
-          setError(data.error || "Registration failed. Please try again.");
-        }
+      const data = await response.json();
+
+      if (response.status === 200 && data.status === 'registered') {
+        // Store the logged-in username and redirect to the home page
+        sessionStorage.setItem('username', formData.username);
+        navigate('/djangoapp');
+      } else if (data.error === 'Already Registered') {
+        setErrorMessage('The username is already registered. Please login.');
       } else {
-        setError(
-          "Registration failed. The username may already be taken."
+        setErrorMessage(
+          data.error || 'Registration failed. Please try again.'
         );
       }
-    } catch (err) {
-      setError(
-        "Unable to connect to the server. Please try again later."
-      );
+    } catch (error) {
+      setErrorMessage('Unable to reach the server. Please try again later.');
     }
   };
 
   return (
-    <div className="register-container">
-      <div className="register-card">
+    <div className="register_container">
+      <div className="register_panel">
         <h1>Sign Up</h1>
-        <p className="register-subtitle">
-          Create your Best Cars Dealership account
-        </p>
+        <p>Create your Best Cars Dealership account</p>
 
-        {error && <div className="register-error">{error}</div>}
+        {errorMessage && (
+          <div className="register_error">{errorMessage}</div>
+        )}
 
-        <form onSubmit={onSubmit}>
-          <div className="form-group">
+        <form onSubmit={handleSubmit}>
+          <div className="form_group">
             <label htmlFor="username">Username</label>
             <input
               type="text"
               id="username"
               name="username"
-              value={username}
-              onChange={onChange}
-              placeholder="Enter username"
+              value={formData.username}
+              onChange={handleChange}
+              placeholder="Enter a username"
               required
             />
           </div>
 
-          <div className="form-group">
+          <div className="form_group">
             <label htmlFor="first_name">First Name</label>
             <input
               type="text"
               id="first_name"
               name="first_name"
-              value={first_name}
-              onChange={onChange}
-              placeholder="Enter first name"
+              value={formData.first_name}
+              onChange={handleChange}
+              placeholder="Enter your first name"
               required
             />
           </div>
 
-          <div className="form-group">
+          <div className="form_group">
             <label htmlFor="last_name">Last Name</label>
             <input
               type="text"
               id="last_name"
               name="last_name"
-              value={last_name}
-              onChange={onChange}
-              placeholder="Enter last name"
+              value={formData.last_name}
+              onChange={handleChange}
+              placeholder="Enter your last name"
               required
             />
           </div>
 
-          <div className="form-group">
+          <div className="form_group">
             <label htmlFor="email">Email</label>
             <input
               type="email"
               id="email"
               name="email"
-              value={email}
-              onChange={onChange}
-              placeholder="Enter email address"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Enter your email address"
               required
             />
           </div>
 
-          <div className="form-group">
+          <div className="form_group">
             <label htmlFor="password">Password</label>
             <input
               type="password"
               id="password"
               name="password"
-              value={password}
-              onChange={onChange}
-              placeholder="Enter password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Enter a password"
               required
             />
           </div>
 
-          <button type="submit" className="register-button">
+          <button type="submit" className="register_button">
             Register
           </button>
         </form>
 
-        <p className="register-login-link">
-          Already have an account? <Link to="/login">Login</Link>
+        <p className="login_link">
+          Already have an account? <Link to="/djangoapp/login">Login here</Link>
         </p>
       </div>
     </div>
