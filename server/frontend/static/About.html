@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>About Us - Car Dealership</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">CarDealership</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav" aria-controls="navbarNav"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/about">About Us</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/contact">Contact Us</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- About Section -->
+    <section class="container my-5">
+        <h1 class="text-center mb-4">Meet the Team</h1>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+
+            <!-- Team Member 1 -->
+            <div class="col">
+                <div class="card h-100 text-center">
+                    <img src="/static/images/team/alex.jpg" class="card-img-top rounded-circle mx-auto mt-3"
+                         alt="Alex Johnson" style="width:150px; height:150px; object-fit:cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Alex Johnson</h5>
+                        <p class="card-text"><strong>Role:</strong> Full‑Stack Engineer</p>
+                        <p class="card-text">Alex designed the REST API architecture and integrated the
+                            sentiment‑analysis micro‑service.</p>
+                        <a href="mailto:alex.johnson@example.com" class="card-link">alex.johnson@example.com</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Team Member 2 -->
+            <div class="col">
+                <div class="card h-100 text-center">
+                    <img src="/static/images/team/maya.jpg" class="card-img-top rounded-circle mx-auto mt-3"
+                         alt="Maya Patel" style="width:150px; height:150px; object-fit:cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Maya Patel</h5>
+                        <p class="card-text"><strong>Role:</strong> Front‑End Lead</p>
+                        <p class="card-text">Maya crafted the responsive UI using React and Bootstrap,
+                            ensuring a seamless experience across devices.</p>
+                        <a href="mailto:maya.patel@example.com" class="card-link">maya.patel@example.com</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Team Member 3 -->
+            <div class="col">
+                <div class="card h-100 text-center">
+                    <img src="/static/images/team/lee.jpg" class="card-img-top rounded-circle mx-auto mt-3"
+                         alt="Lee Wang" style="width:150px; height:150px; object-fit:cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">Lee Wang</h5>
+                        <p class="card-text"><strong>Role:</strong> DevOps Engineer</p>
+                        <p class="card-text">Lee set up Docker containers, CI/CD pipelines, and automated
+                            deployments to the cloud.</p>
+                        <a href="mailto:lee.wang@example.com" class="card-link">lee.wang@example.com</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <footer class="bg-light text-center py-3">
+        © 2024 Car Dealership. All rights reserved.
+    </footer>
+
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
