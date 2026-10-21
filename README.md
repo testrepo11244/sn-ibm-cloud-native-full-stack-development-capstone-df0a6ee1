@@ -1,88 +1,90 @@
-# Best Cars Dealership — Full Stack Application Development Capstone
+# xrwvm-fullstack_developer_capstone
 
-## Repository Name
-**xrwvm-fullstack_developers_capstone**
+## Project Name: Full Stack Car Dealership Application (Django + React)
 
-## Project Name
-**Best Cars Dealership — Django + React Full Stack Car Dealership Application**
+**Repository Name:** `xrwvm-fullstack_developer_capstone`
+
+**Project Name:** Full Stack Car Dealership Application — a full-stack web application built with a Django REST backend and a React frontend for browsing car dealerships, viewing and posting dealer reviews, performing sentiment analysis on reviews, and managing user registration/login.
+
+---
 
 ## Project Overview
-Best Cars Dealership is a full-stack web application developed as the final capstone project for the IBM **Full Stack Application Development Capstone Project** course. The application allows users to browse car dealerships, view dealer details and customer reviews, perform sentiment analysis on reviews, register/login, and post their own reviews for a dealership.
+
+This capstone project for the **IBM Full Stack Application Development Capstone Project** course demonstrates end-to-end full-stack development skills. The application allows users to:
+
+- View a list of car dealerships (filtered by state)
+- View dealer details and customer reviews
+- Register and log in as a user (Django authentication)
+- Post reviews for dealerships
+- Run sentiment analysis (Watson NLU) on review text
+- Manage car makes and models through the Django admin panel
 
 ## Technology Stack
-- **Backend:** Django, Django REST Framework, SQLite3, Node.js (Express microservice for sentiment analysis)
-- **Frontend:** React, React Router, Cloudant-style REST services, HTML5, CSS3, Bootstrap
-- **Authentication:** Django user authentication (login, logout, registration)
-- **Sentiment Analysis:** IBM Watson NLU / Express sentiment microservice (`sentiment_analyzer`)
-- **CI/CD:** GitHub Actions workflow with IBM Cloud toolchain deployment
-- **Deployment:** IBM Cloud Code Engine
 
-## Application Features
-1. **Home / Dealerships page** — displays all dealers, with optional filtering by state.
-2. **Dealer details page** — shows dealer information along with all posted reviews.
-3. **About Us page** (`server/frontend/static/About.html`) — team members with roles, details, and email IDs.
-4. **Contact Us page** (`server/frontend/static/Contact.html`) — contact details with navigation bar.
-5. **User Registration (Sign-up)** — Username, First Name, Last Name, Email, Password fields with a Register button.
-6. **User Login / Logout** — session-based authentication for reviewing dealers.
-7. **Post Review** — authenticated users can post a review for any dealership.
-8. **Sentiment Analysis** — each review is analyzed (positive / negative / neutral) via the sentiment analyzer microservice.
-9. **REST API endpoints** — get all dealers, get dealer by ID, get dealers by state, get dealer reviews, add review, analyze review sentiment.
+| Layer      | Technology |
+|------------|------------|
+| Frontend   | React.js, React Router, HTML5, CSS3 |
+| Backend    | Django, Django REST Framework |
+| Database   | SQLite (Django ORM) |
+| Auth       | Django session authentication, JWT (djangorestframework-simplejwt) |
+| NLU        | IBM Watson Natural Language Understanding (sentiment analysis) |
+| CI/CD      | GitHub Actions |
+| Deployment | IBM Cloud Code Engine / Koyeb |
 
-## Project Structure
+## Repository Structure
+
 ```
-xrwvm-fullstack_developers_capstone/
+xrwvm-fullstack_developer_capstone/
 ├── server/
-│   ├── djangoapp/                 # Django application (models, views, templates, static)
-│   │   ├── static/
-│   │   │   ├── About.html
-│   │   │   └── Contact.html
-│   │   ├── templates/djangoapp/   # index.html, dealer_details.html, add_review.html, etc.
-│   │   ├── models.py, views.py, urls.py, restapis.py
+│   ├── djangoapp/                 # Django application (models, views, REST endpoints)
 │   ├── server/                    # Django project settings
-│   ├── frontend/
-│   │   └── src/
-│   │       ├── components/
-│   │       │   ├── Register/Register.jsx
-│   │       │   ├── Login/Login.jsx
-│   │       │   ├── Dealers/Dealers.jsx
-│   │       │   ├── Dealer/Dealer.jsx
-│   │       │   └── PostReview/PostReview.jsx
-│   ├── microservices/             # sentiment analyzer (Express) microservice
+│   ├── frontend/                  # React frontend
+│   │   ├── src/
+│   │   │   ├── components/
+│   │   │   │   ├── Register/Register.jsx
+│   │   │   │   ├── Login/Login.jsx
+│   │   │   │   ├── Dealers/Dealers.jsx
+│   │   │   │   ├── Dealer/Dealer.jsx
+│   │   │   │   └── PostReview/PostReview.jsx
+│   │   │   └── App.js
+│   │   └── static/                # Static pages (About.html, Contact.html)
 │   ├── manage.py
-│   ├── requirements.txt
-│   └── db.sqlite3
-├── .github/workflows/server.yml   # GitHub Actions CI/CD pipeline
-└── README.md
+│   └── requirements.txt
+├── .github/workflows/server.yml   # GitHub Actions CI/CD workflow
+├── README.md
+└── .gitignore
 ```
+
+## Key REST API Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/djangoapp/register` | POST | Register a new user |
+| `/djangoapp/login` | POST | Log in a user |
+| `/djangoapp/logout` | GET | Log out the current user |
+| `/djangoapp/get_dealers/` | GET | Get all dealers |
+| `/djangoapp/get_dealers/<state>` | GET | Get dealers by state |
+| `/djangoapp/dealer/<id>` | GET | Get dealer details by ID |
+| `/djangoapp/reviews/dealer/<id>` | GET | Get reviews for a dealer |
+| `/djangoapp/add_review` | POST | Add a review for a dealer |
+| `/djangoapp/get_cars` | GET | Get all car makes and models |
+| `/djangoapp/analyze_review_sentiment` | POST | Analyze sentiment of review text |
 
 ## Setup and Run Locally
+
 ```bash
-# Backend (Django)
+# Backend
 cd server
 pip install -r requirements.txt
 python manage.py migrate
 python manage.py runserver
 
-# Frontend (React)
+# Frontend
 cd server/frontend
 npm install
 npm start
-
-# Sentiment analyzer microservice
-cd server/microservices
-npm install
-node server.js
 ```
 
-## Key Endpoints
-- `/djangoapp/` — home page listing dealers
-- `/djangoapp/dealer/<int:dealer_id>` — dealer details and reviews
-- `/djangoapp/add_review/<int:dealer_id>` — post a review
-- `/djangoapp/get_dealers/` — REST: all dealers
-- `/djangoapp/get_dealers/<str:state>` — REST: dealers by state
-- `/djangoapp/dealer/<int:dealer_id>/` — REST: dealer by ID
-- `/djangoapp/get_reviews/<int:dealer_id>` — REST: dealer reviews
-- `/djangoapp/login`, `/djangoapp/logout`, `/djangoapp/register` — authentication
-
 ## Author
-Capstone project submitted for the IBM Full Stack Application Development Capstone Project (Final Project: Submission and Evaluation).
+
+Capstone project completed as part of the IBM Full Stack Application Development Professional Certificate.
