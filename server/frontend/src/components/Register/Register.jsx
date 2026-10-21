@@ -1,80 +1,72 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import "./Register.css";
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import './Register.css';
 
-function Register() {
+const Register = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    username: "",
-    first_name: "",
-    last_name: "",
-    email: "",
-    password: "",
+    username: '',
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: ''
   });
 
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('');
   const [error, setError] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(false);
-    setMessage("");
 
     try {
-      const response = await fetch(
-        "http://localhost:8000/djangoapp/register",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            username: formData.username,
-            first_name: formData.first_name,
-            last_name: formData.last_name,
-            email: formData.email,
-            password: formData.password,
-          }),
-        }
-      );
+      const response = await fetch('http://localhost:8000/djangoapp/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          userName: formData.username,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          password: formData.password
+        })
+      });
 
       const data = await response.json();
 
-      if (response.status === 201 && data.status === "Registered") {
-        setMessage("Registration successful! You can now log in.");
-        sessionStorage.setItem("username", data.username);
+      if (data.status === 'authenticated') {
+        sessionStorage.setItem('username', formData.username);
+        sessionStorage.setItem('authToken', data.token);
+        setError(false);
+        setMessage('Registration successful! Redirecting to dealers page...');
         setTimeout(() => {
-          navigate("/login");
+          navigate('/');
         }, 1500);
-      } else if (data.error === "Already Registered") {
-        setError(true);
-        setMessage(
-          "The username is already registered. Please choose a different username."
-        );
       } else {
         setError(true);
-        setMessage("Registration failed. Please check your details and try again.");
+        setMessage(data.error || 'Registration failed. Username may already exist.');
       }
     } catch (err) {
       setError(true);
-      setMessage("Unable to reach the server. Please try again later.");
+      setMessage('Unable to connect to the server. Please try again later.');
     }
   };
 
   return (
     <div className="register-container">
       <div className="register-card">
-        <h1 className="register-title">Sign Up</h1>
+        <h2>Sign Up</h2>
         <p className="register-subtitle">
-          Create your Best Cars Dealership account to review dealers.
+          Create an account to review your favorite car dealerships.
         </p>
 
         <form onSubmit={handleSubmit} className="register-form">
@@ -92,26 +84,26 @@ function Register() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="first_name">First Name</label>
+            <label htmlFor="firstName">First Name</label>
             <input
               type="text"
-              id="first_name"
-              name="first_name"
+              id="firstName"
+              name="firstName"
               placeholder="Enter your first name"
-              value={formData.first_name}
+              value={formData.firstName}
               onChange={handleChange}
               required
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="last_name">Last Name</label>
+            <label htmlFor="lastName">Last Name</label>
             <input
               type="text"
-              id="last_name"
-              name="last_name"
+              id="lastName"
+              name="lastName"
               placeholder="Enter your last name"
-              value={formData.last_name}
+              value={formData.lastName}
               onChange={handleChange}
               required
             />
@@ -150,7 +142,7 @@ function Register() {
         </form>
 
         {message && (
-          <p className={error ? "register-error" : "register-success"}>
+          <p className={error ? 'register-error' : 'register-success'}>
             {message}
           </p>
         )}
@@ -161,6 +153,6 @@ function Register() {
       </div>
     </div>
   );
-}
+};
 
 export default Register;
