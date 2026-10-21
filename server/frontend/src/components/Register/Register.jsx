@@ -1,57 +1,55 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import './Register.css';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import "./Register.css";
 
 const Register = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    username: '',
-    first_name: '',
-    last_name: '',
-    email: '',
-    password: ''
+    username: "",
+    first_name: "",
+    last_name: "",
+    email: "",
+    password: "",
   });
-
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorMessage('');
+    setErrorMessage("");
 
     try {
-      const response = await fetch(
-        'http://localhost:8000/djangoapp/register',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(formData)
-        }
-      );
+      const response = await fetch("http://localhost:8000/djangoapp/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
       const data = await response.json();
 
-      if (response.status === 201 && data.status === 'success') {
-        sessionStorage.setItem('username', data.username);
-        sessionStorage.setItem('auth', 'true');
-        navigate('/');
+      if (response.status === 201) {
+        // Persist the logged-in user in session storage
+        sessionStorage.setItem("username", data.username);
+        // Redirect the newly registered user to the home (Dealers) page
+        navigate("/");
       } else {
         setErrorMessage(
-          data.message || 'Registration failed. The username may already exist.'
+          data.error || "Registration failed. The username may already exist."
         );
       }
     } catch (error) {
       setErrorMessage(
-        'Unable to reach the server. Please make sure the Django server is running.'
+        "Unable to reach the server. Please make sure the Django backend is running."
       );
     }
   };
@@ -61,77 +59,74 @@ const Register = () => {
       <div className="register-card">
         <h1 className="register-title">Sign Up</h1>
         <p className="register-subtitle">
-          Create your DriveNow account to review dealerships
+          Create your Best Cars Dealership account to review dealers and post
+          reviews.
         </p>
 
-        {errorMessage && (
-          <div className="register-error" role="alert">
-            {errorMessage}
-          </div>
-        )}
+        {errorMessage && <p className="register-error">{errorMessage}</p>}
 
-        <form onSubmit={handleSubmit} className="register-form">
-          <div className="form-group">
+        <form className="register-form" onSubmit={handleSubmit}>
+          <div className="form-field">
             <label htmlFor="username">Username</label>
             <input
               type="text"
               id="username"
               name="username"
+              placeholder="Enter a username"
               value={formData.username}
               onChange={handleChange}
-              placeholder="Enter a username"
               required
             />
           </div>
 
-          <div className="form-group">
+          <div className="form-field">
             <label htmlFor="first_name">First Name</label>
             <input
               type="text"
               id="first_name"
               name="first_name"
+              placeholder="Enter your first name"
               value={formData.first_name}
               onChange={handleChange}
-              placeholder="Enter your first name"
               required
             />
           </div>
 
-          <div className="form-group">
+          <div className="form-field">
             <label htmlFor="last_name">Last Name</label>
             <input
               type="text"
               id="last_name"
               name="last_name"
+              placeholder="Enter your last name"
               value={formData.last_name}
               onChange={handleChange}
-              placeholder="Enter your last name"
               required
             />
           </div>
 
-          <div className="form-group">
+          <div className="form-field">
             <label htmlFor="email">Email</label>
             <input
               type="email"
               id="email"
               name="email"
+              placeholder="Enter your email address"
               value={formData.email}
               onChange={handleChange}
-              placeholder="Enter your email address"
               required
             />
           </div>
 
-          <div className="form-group">
+          <div className="form-field">
             <label htmlFor="password">Password</label>
             <input
               type="password"
               id="password"
               name="password"
+              placeholder="Enter a password (minimum 8 characters)"
               value={formData.password}
               onChange={handleChange}
-              placeholder="Enter a password"
               minLength="8"
               required
             />
@@ -142,7 +137,7 @@ const Register = () => {
           </button>
         </form>
 
-        <p className="register-footer">
+        <p className="register-login-link">
           Already have an account? <Link to="/login">Login here</Link>
         </p>
       </div>
