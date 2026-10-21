@@ -1,87 +1,63 @@
-# Best Cars Dealership — Full Stack Application Development Capstone Project
+# Full Stack Car Dealership Application (Capstone Project)
 
-- **Repository name:** `car-dealership-capstone`
-- **Project name:** Best Cars Dealership — Django + React Full Stack Web Application
+## Repository Name
+**fullstack-car-dealership-capstone**
 
----
+## Project Name
+**DriveNow — Full Stack Car Dealership Application**
 
-## 📋 Project Overview
+## Project Overview
+DriveNow is a full-stack web application developed as the final capstone project for the
+*Full Stack Application Development Capstone Project* course (IBM Skills Network).
+The application allows users to browse car dealerships, view dealer details and customer
+reviews, post new reviews, and read sentiment-analyzed review feedback.
 
-Best Cars Dealership is a full-stack web application developed as the final capstone project for the **IBM Full Stack Application Development Capstone Project** course. The application allows users to browse car dealerships, filter dealers by state, view dealer details and reviews, post new reviews, and analyze review sentiment using IBM Watson Natural Language Understanding (NLU).
+## Tech Stack
+- **Backend:** Django, Django REST Framework, SQLite
+- **Frontend:** React (Create React App), React Router, Express (microservice for dealer data)
+- **Sentiment Analysis:** IBM Watson Natural Language Understanding (NLU)
+- **CI/CD:** GitHub Actions
+- **Deployment:** IBM Cloud Code Engine
 
-## 🏗️ Architecture
-
-| Layer      | Technology |
-|------------|------------|
-| Frontend   | React.js (with React Router) |
-| Backend    | Django + Django REST Framework |
-| Database   | SQLite (dev) / PostgreSQL (deployment) |
-| Sentiment Analysis | IBM Watson NLU |
-| CI/CD      | GitHub Actions |
-| Deployment | IBM Cloud Code Engine |
-
-## ✨ Features
-
-- User registration (Sign-up) and login/logout with session authentication
-- Home page listing all dealerships retrieved from the backend API
-- Filter dealerships by U.S. state
-- Dealer detail page showing dealer information and customer reviews
+## Key Features
+- User registration, login, and logout (session-based authentication)
+- Home page listing all dealerships with state-based filtering
+- Dealer detail page with customer reviews
 - Post Review page (available to logged-in users only)
-- Sentiment analysis (positive / negative / neutral) on every review via IBM Watson NLU
-- Static pages: **About Us** and **Contact Us**
-- Admin panel (Django admin) for managing dealers, cars, and reviews
+- Sentiment analysis of review text via Watson NLU
+- Static pages: About Us and Contact Us
+- Django admin panel for managing dealers, cars, and reviews
 - Automated CI/CD pipeline with GitHub Actions
 
-## 📁 Project Structure
-
+## Repository Structure
 ```
-car-dealership-capstone/
+fullstack-car-dealership-capstone/
 ├── server/
-│   ├── djangoapp/                 # Django application (models, views, APIs)
-│   ├── server/                    # Django project settings
-│   ├── frontend/                  # React application
+│   ├── djangoapp/            # Django application (models, views, templates)
+│   ├── server/               # Django project settings
+│   ├── frontend/             # React frontend
 │   │   ├── src/
-│   │   │   ├── components/
-│   │   │   │   ├── Register/      # Sign-up page (Register.jsx)
-│   │   │   │   ├── Login/
-│   │   │   │   ├── Dealers/
-│   │   │   │   ├── Dealer/
-│   │   │   │   └── PostReview/
-│   │   │   └── App.js
-│   │   └── static/                # About.html, Contact.html, CSS
+│   │   │   ├── components/   # Register, Login, Dealers, DealerDetail, PostReview
+│   │   │   └── static/       # About.html, Contact.html, CSS
 │   ├── manage.py
-│   ├── requirements.txt
-│   └── Procfile
-├── .github/workflows/cicd.yml     # GitHub Actions CI/CD workflow
+│   └── requirements.txt
+├── .github/workflows/        # GitHub Actions CI/CD workflow
 └── README.md
 ```
 
-## 🔌 REST API Endpoints
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/djangoapp/register` | POST | Register a new user |
-| `/djangoapp/login` | POST | Log in a user |
-| `/djangoapp/logout` | GET | Log out the current user |
-| `/djangoapp/get_dealers/` | GET | Fetch all dealers |
-| `/djangoapp/get_dealers/<state>` | GET | Fetch dealers by state |
-| `/djangoapp/dealer/<id>` | GET | Fetch dealer details by ID |
-| `/djangoapp/reviews/dealer/<id>` | GET | Fetch reviews for a dealer |
-| `/djangoapp/add_review` | POST | Post a review for a dealer |
-| `/djangoapp/analyze_review` | POST | Run sentiment analysis on review text |
-
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Python 3.9+
 - Node.js 16+
-- npm
+- npm 8+
 
 ### Backend Setup
 ```bash
 cd server
 pip install -r requirements.txt
 python manage.py migrate
+python manage.py loaddata djangoapp/fixtures/dealerships.json
 python manage.py runserver
 ```
 
@@ -92,16 +68,18 @@ npm install
 npm start
 ```
 
-## 🔗 Deployment
+## API Endpoints
+| Endpoint | Method | Description |
+|---|---|---|
+| `/djangoapp/register` | POST | Register a new user |
+| `/djangoapp/login` | POST | Log in a user |
+| `/djangoapp/logout` | GET | Log out the current user |
+| `/djangoapp/get_dealers/` | GET | Retrieve all dealers |
+| `/djangoapp/get_dealers/<state>` | GET | Retrieve dealers by state |
+| `/djangoapp/dealer/<id>` | GET | Retrieve dealer details by ID |
+| `/djangoapp/reviews/dealer/<id>` | GET | Retrieve reviews for a dealer |
+| `/djangoapp/add_review` | POST | Post a review (requires login) |
+| `/djangoapp/analyze_review` | POST | Sentiment analysis of review text |
 
-The application is deployed on IBM Cloud Code Engine:
-**https://bestcarsdealership.us-south.codeengine.app.com/**
-
-## 👤 Author
-
-- **Name:** Alex Johnson
-- **Course:** Full Stack Application Development Capstone Project (IBM Skills Network)
-
-## 📄 License
-
-This project is licensed under the MIT License.
+## Author
+Capstone learner — IBM Full Stack Application Development Professional Certificate
