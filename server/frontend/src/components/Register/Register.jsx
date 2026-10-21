@@ -7,144 +7,143 @@ const Register = () => {
 
   const [formData, setFormData] = useState({
     username: "",
-    firstName: "",
-    lastName: "",
+    first_name: "",
+    last_name: "",
     email: "",
     password: "",
   });
 
   const [errorMessage, setErrorMessage] = useState("");
 
-  const { username, firstName, lastName, email, password } = formData;
-
-  const onChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
   };
 
-  const onSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMessage("");
 
-    const registerURL = `${process.env.REACT_APP_BACKEND_URL}/djangoapp/register`;
-
     try {
-      const res = await fetch(registerURL, {
+      const response = await fetch("/djangoapp/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          userName: username,
-          firstName: firstName,
-          lastName: lastName,
-          email: email,
-          password: password,
+          userName: formData.username,
+          firstName: formData.first_name,
+          lastName: formData.last_name,
+          email: formData.email,
+          password: formData.password,
         }),
       });
 
-      const data = await res.json();
+      const data = await response.json();
 
-      if (res.status === 200 && data.userName) {
-        // Registration successful - store username in session and go to home page
-        sessionStorage.setItem("username", data.userName);
+      if (response.status === 200 && data.status === "Authenticated") {
+        sessionStorage.setItem("username", formData.username);
+        sessionStorage.setItem("authToken", data.token);
         navigate("/");
-      } else if (res.status === 409) {
-        setErrorMessage(
-          "The username already exists. Please choose a different username."
-        );
       } else {
-        setErrorMessage(data.error || "Registration failed. Please try again.");
+        setErrorMessage(
+          data.error || "Registration failed. The username may already exist."
+        );
       }
     } catch (error) {
-      setErrorMessage(
-        "Unable to connect to the server. Please try again later."
-      );
+      setErrorMessage("Network error. Please try again later.");
     }
   };
 
   return (
-    <div className="register_container">
-      <div className="register_form_container">
-        <h1 className="register_title">Sign Up</h1>
-        <p className="register_subtitle">
-          Create your account to review our dealers
+    <div className="register-container">
+      <div className="register-card">
+        <h2 className="register-title">Sign Up</h2>
+        <p className="register-subtitle">
+          Create your account to review dealers and post reviews.
         </p>
 
-        <form onSubmit={onSubmit} className="register_form">
-          <div className="form_group">
+        <form onSubmit={handleSubmit} className="register-form">
+          <div className="form-group">
             <label htmlFor="username">Username</label>
             <input
               type="text"
               id="username"
               name="username"
-              value={username}
-              onChange={onChange}
               placeholder="Enter your username"
+              value={formData.username}
+              onChange={handleChange}
               required
             />
           </div>
 
-          <div className="form_group">
-            <label htmlFor="firstName">First Name</label>
+          <div className="form-group">
+            <label htmlFor="first_name">First Name</label>
             <input
               type="text"
-              id="firstName"
-              name="firstName"
-              value={firstName}
-              onChange={onChange}
+              id="first_name"
+              name="first_name"
               placeholder="Enter your first name"
+              value={formData.first_name}
+              onChange={handleChange}
               required
             />
           </div>
 
-          <div className="form_group">
-            <label htmlFor="lastName">Last Name</label>
+          <div className="form-group">
+            <label htmlFor="last_name">Last Name</label>
             <input
               type="text"
-              id="lastName"
-              name="lastName"
-              value={lastName}
-              onChange={onChange}
+              id="last_name"
+              name="last_name"
               placeholder="Enter your last name"
+              value={formData.last_name}
+              onChange={handleChange}
               required
             />
           </div>
 
-          <div className="form_group">
+          <div className="form-group">
             <label htmlFor="email">Email</label>
             <input
               type="email"
               id="email"
               name="email"
-              value={email}
-              onChange={onChange}
               placeholder="Enter your email address"
+              value={formData.email}
+              onChange={handleChange}
               required
             />
           </div>
 
-          <div className="form_group">
+          <div className="form-group">
             <label htmlFor="password">Password</label>
             <input
               type="password"
               id="password"
               name="password"
-              value={password}
-              onChange={onChange}
               placeholder="Enter your password"
-              minLength="6"
+              value={formData.password}
+              onChange={handleChange}
               required
             />
           </div>
 
-          {errorMessage && <p className="error_message">{errorMessage}</p>}
+          {errorMessage && (
+            <div className="error-message" role="alert">
+              {errorMessage}
+            </div>
+          )}
 
-          <button type="submit" className="register_button">
+          <button type="submit" className="register-button">
             Register
           </button>
         </form>
 
-        <p className="login_redirect">
+        <p className="login-redirect">
           Already have an account? <Link to="/login">Login here</Link>
         </p>
       </div>
