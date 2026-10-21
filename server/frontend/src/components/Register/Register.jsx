@@ -1,118 +1,107 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import "./Register.css";
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import './Register.css';
 
 const Register = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    userName: "",
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
+    username: '',
+    first_name: '',
+    last_name: '',
+    email: '',
+    password: ''
   });
 
-  const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setErrorMessage("");
-    setSuccessMessage("");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setErrorMessage('');
 
     try {
-      const response = await fetch(
-        "http://localhost:8000/djangoapp/register",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userName: formData.userName,
-            firstName: formData.firstName,
-            lastName: formData.lastName,
-            email: formData.email,
-            password: formData.password,
-          }),
-        }
-      );
+      const response = await fetch('http://localhost:8000/djangoapp/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
 
       const data = await response.json();
 
-      if (response.status === 200 && data.userName) {
-        sessionStorage.setItem("username", data.userName);
-        setSuccessMessage(
-          `Registration successful! Welcome, ${data.userName}. Redirecting...`
-        );
-        setTimeout(() => {
-          navigate("/");
-        }, 1500);
+      if (response.status === 201 && data.status === 'success') {
+        // Store the username in session storage and redirect to the home page
+        sessionStorage.setItem('username', data.username);
+        navigate('/');
       } else {
         setErrorMessage(
-          data.error || "Registration failed. The username may already exist."
+          data.message || 'Registration failed. The username may already exist. Please try again.'
         );
       }
     } catch (error) {
-      setErrorMessage(
-        "Unable to connect to the server. Please try again later."
-      );
+      setErrorMessage('An error occurred while registering. Please try again later.');
     }
   };
 
   return (
     <div className="register-container">
       <div className="register-card">
-        <h2 className="register-title">Sign Up</h2>
+        <h1 className="register-title">Sign Up</h1>
         <p className="register-subtitle">
-          Create your account to review dealerships
+          Create your account to review dealers and post reviews.
         </p>
+
+        {errorMessage && (
+          <div className="register-error" role="alert">
+            {errorMessage}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="register-form">
           <div className="form-group">
-            <label htmlFor="userName">Username</label>
+            <label htmlFor="username">Username</label>
             <input
               type="text"
-              id="userName"
-              name="userName"
-              placeholder="Enter your username"
-              value={formData.userName}
+              id="username"
+              name="username"
+              value={formData.username}
               onChange={handleChange}
+              placeholder="Enter a username"
               required
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="firstName">First Name</label>
+            <label htmlFor="first_name">First Name</label>
             <input
               type="text"
-              id="firstName"
-              name="firstName"
+              id="first_name"
+              name="first_name"
+              value={formData.first_name}
+              onChange={handleChange}
               placeholder="Enter your first name"
-              value={formData.firstName}
-              onChange={handleChange}
               required
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="lastName">Last Name</label>
+            <label htmlFor="last_name">Last Name</label>
             <input
               type="text"
-              id="lastName"
-              name="lastName"
-              placeholder="Enter your last name"
-              value={formData.lastName}
+              id="last_name"
+              name="last_name"
+              value={formData.last_name}
               onChange={handleChange}
+              placeholder="Enter your last name"
               required
             />
           </div>
@@ -123,9 +112,9 @@ const Register = () => {
               type="email"
               id="email"
               name="email"
-              placeholder="Enter your email address"
               value={formData.email}
               onChange={handleChange}
+              placeholder="Enter your email address"
               required
             />
           </div>
@@ -136,27 +125,20 @@ const Register = () => {
               type="password"
               id="password"
               name="password"
-              placeholder="Enter your password"
               value={formData.password}
               onChange={handleChange}
+              placeholder="Enter a password"
               minLength="6"
               required
             />
           </div>
-
-          {errorMessage && (
-            <p className="error-message">{errorMessage}</p>
-          )}
-          {successMessage && (
-            <p className="success-message">{successMessage}</p>
-          )}
 
           <button type="submit" className="register-button">
             Register
           </button>
         </form>
 
-        <p className="login-link">
+        <p className="register-footer">
           Already have an account? <Link to="/login">Login here</Link>
         </p>
       </div>
