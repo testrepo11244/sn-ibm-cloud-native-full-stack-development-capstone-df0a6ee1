@@ -16,10 +16,9 @@ const Register = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: value,
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -28,54 +27,60 @@ const Register = () => {
     setErrorMessage("");
 
     try {
-      const response = await fetch("/djangoapp/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userName: formData.username,
-          firstName: formData.first_name,
-          lastName: formData.last_name,
-          email: formData.email,
-          password: formData.password,
-        }),
-      });
+      const response = await fetch(
+        "http://localhost:8000/djangoapp/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
       const data = await response.json();
 
-      if (response.status === 200 && data.status === "Authenticated") {
-        sessionStorage.setItem("username", formData.username);
+      if (response.status === 201 && data.status === "authenticated") {
+        // Store the session details and redirect to the home page
+        sessionStorage.setItem("username", data.username);
         sessionStorage.setItem("authToken", data.token);
         navigate("/");
       } else {
         setErrorMessage(
-          data.error || "Registration failed. The username may already exist."
+          data.error || "Registration failed. Please try again."
         );
       }
     } catch (error) {
-      setErrorMessage("Network error. Please try again later.");
+      setErrorMessage(
+        "Unable to reach the server. Please try again later."
+      );
     }
   };
 
   return (
     <div className="register-container">
       <div className="register-card">
-        <h2 className="register-title">Sign Up</h2>
+        <h1 className="register-title">Sign Up</h1>
         <p className="register-subtitle">
-          Create your account to review dealers and post reviews.
+          Create your account to review dealerships
         </p>
 
-        <form onSubmit={handleSubmit} className="register-form">
+        {errorMessage && (
+          <div className="register-error" role="alert">
+            {errorMessage}
+          </div>
+        )}
+
+        <form className="register-form" onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="username">Username</label>
             <input
               type="text"
               id="username"
               name="username"
-              placeholder="Enter your username"
               value={formData.username}
               onChange={handleChange}
+              placeholder="Enter your username"
               required
             />
           </div>
@@ -86,9 +91,9 @@ const Register = () => {
               type="text"
               id="first_name"
               name="first_name"
-              placeholder="Enter your first name"
               value={formData.first_name}
               onChange={handleChange}
+              placeholder="Enter your first name"
               required
             />
           </div>
@@ -99,9 +104,9 @@ const Register = () => {
               type="text"
               id="last_name"
               name="last_name"
-              placeholder="Enter your last name"
               value={formData.last_name}
               onChange={handleChange}
+              placeholder="Enter your last name"
               required
             />
           </div>
@@ -112,9 +117,9 @@ const Register = () => {
               type="email"
               id="email"
               name="email"
-              placeholder="Enter your email address"
               value={formData.email}
               onChange={handleChange}
+              placeholder="Enter your email address"
               required
             />
           </div>
@@ -125,25 +130,20 @@ const Register = () => {
               type="password"
               id="password"
               name="password"
-              placeholder="Enter your password"
               value={formData.password}
               onChange={handleChange}
+              placeholder="Enter your password"
+              minLength="8"
               required
             />
           </div>
-
-          {errorMessage && (
-            <div className="error-message" role="alert">
-              {errorMessage}
-            </div>
-          )}
 
           <button type="submit" className="register-button">
             Register
           </button>
         </form>
 
-        <p className="login-redirect">
+        <p className="register-footer">
           Already have an account? <Link to="/login">Login here</Link>
         </p>
       </div>
