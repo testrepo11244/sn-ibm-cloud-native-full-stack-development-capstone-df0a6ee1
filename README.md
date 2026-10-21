@@ -1,86 +1,109 @@
-# Full Stack Car Dealership Application
+# Full Stack Application Development Capstone Project
 
 ## Repository Name
 **fullstack-car-dealership-capstone**
 
 ## Project Name
-**Best Cars Dealership — Full Stack Application Development Capstone Project**
+**AutoDeal – Full Stack Car Dealership Application**
 
-## Project Overview
-This project is the final capstone for the IBM Full Stack Application Development Professional Certificate. It is a full-stack car dealership web application built with **Django** (backend) and **React** (frontend), allowing users to browse car dealers, view and post dealer reviews, perform sentiment analysis on reviews, and manage user authentication (sign-up, login, and logout).
+---
 
-## Features
-- **User Authentication** — Sign-up, login, and logout functionality using Django's authentication system
-- **Dealer Listings** — View all dealers, filter dealers by state, and view dealer details by ID
-- **Dealer Reviews** — Retrieve and post reviews for any dealer
-- **Sentiment Analysis** — IBM Watson NLU-based sentiment analysis on review text
-- **Admin Panel** — Django admin site for managing dealers, cars, and reviews
-- **About Us & Contact Us** — Static pages with updated styling and contact details
-- **CI/CD Pipeline** — GitHub Actions workflow for automated build, test, and deployment to IBM Cloud Code Engine
+## 📋 Project Overview
 
-## Technology Stack
+AutoDeal is a full-stack web application developed as the capstone project for the
+**IBM Full Stack Application Development Capstone Project** course. The application
+allows users to browse car dealerships, view dealership details and customer reviews,
+perform sentiment analysis on reviews, and post their own reviews after registering
+and logging in.
+
+## 🚀 Features
+
+- **Dealer Listings** – View all car dealers or filter them by state
+- **Dealer Details** – View dealer information along with customer reviews
+- **User Authentication** – Sign-up, login, and logout functionality (Django auth)
+- **Review Posting** – Authenticated users can post reviews for any dealer
+- **Sentiment Analysis** – IBM Watson NLU–powered sentiment analysis of review text
+- **Admin Panel** – Django admin for managing dealers, cars, and reviews
+- **About Us & Contact Us** – Static pages with navigation and styling
+- **CI/CD Pipeline** – GitHub Actions workflow for build, test, and deployment
+- **Cloud Deployment** – Application deployed to IBM Cloud Code Engine
+
+## 🛠️ Technology Stack
+
 | Layer      | Technology |
 |------------|------------|
-| Frontend   | React, React Router, Cloudant-style REST calls via fetch |
-| Backend    | Django, Django REST Framework, SQLite / Django ORM |
-| NLU        | IBM Watson Natural Language Understanding (sentiment analysis) |
-| Database   | SQLite (development) / Db2 (cloud) |
-| Deployment | IBM Cloud Code Engine, Docker |
+| Frontend   | React.js, React Router, Express (Node proxy server) |
+| Backend    | Django, Django REST Framework |
+| Database   | SQLite / Django ORM |
+| NLU        | IBM Watson Natural Language Understanding |
 | CI/CD      | GitHub Actions |
+| Deployment | IBM Cloud Code Engine |
 
-## Project Structure
+## 📁 Project Structure
+
 ```
 fullstack-car-dealership-capstone/
+│
 ├── server/
 │   ├── djangoapp/                 # Django application (models, views, templates)
-│   │   ├── static/
-│   │   │   ├── About.html
-│   │   │   └── Contact.html
-│   │   └── ...
+│   ├── server/                    # Django project settings
 │   ├── frontend/
 │   │   ├── src/
 │   │   │   ├── components/
-│   │   │   │   ├── Register/
-│   │   │   │   │   └── Register.jsx
-│   │   │   │   ├── Login/
-│   │   │   │   ├── Dealers/
-│   │   │   │   ├── Dealer/
-│   │   │   │   ├── PostReview/
-│   │   │   │   └── ...
+│   │   │   │   ├── Register/      # Sign-up page component
+│   │   │   │   ├── Login/         # Login page component
+│   │   │   │   ├── Dealers/       # Dealers home page component
+│   │   │   │   ├── Dealer/        # Dealer details & reviews component
+│   │   │   │   ├── PostReview/    # Post review component
+│   │   │   │   └── SearchCars/    # Car makes and models search
 │   │   │   └── App.js
-│   │   └── package.json
+│   │   └── static/                # Static HTML pages (About.html, Contact.html)
 │   ├── manage.py
-│   ├── server.wsgi
 │   └── requirements.txt
-├── .github/workflows/server.yml   # GitHub Actions CI/CD workflow
-├── Dockerfile
-└── README.md
+│
+├── .github/workflows/             # GitHub Actions CI/CD workflow
+├── README.md
+└── .gitignore
 ```
 
-## Getting Started
+## ⚙️ Setup and Installation
 
-### Prerequisites
-- Python 3.9+
-- Node.js 16+
-- IBM Cloud account (for Watson NLU and deployment)
+1. **Clone the repository**
 
-### Backend Setup
-```bash
-cd server
-pip install -r requirements.txt
-python manage.py makemigrations
-python manage.py migrate
-python manage.py runserver
-```
+   ```bash
+   git clone https://github.com/<username>/fullstack-car-dealership-capstone.git
+   cd fullstack-car-dealership-capstone/server
+   ```
 
-### Frontend Setup
-```bash
-cd server/frontend
-npm install
-npm start
-```
+2. **Install Python dependencies**
 
-## API Endpoints
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Run database migrations**
+
+   ```bash
+   python manage.py migrate
+   python manage.py populate_db
+   ```
+
+4. **Start the Django server**
+
+   ```bash
+   python manage.py runserver
+   ```
+
+5. **Start the React frontend**
+
+   ```bash
+   cd frontend
+   npm install
+   npm start
+   ```
+
+## 🔗 Key API Endpoints
+
 | Endpoint | Method | Description |
 |----------|--------|-------------|
 | `/djangoapp/register` | POST | Register a new user |
@@ -91,10 +114,16 @@ npm start
 | `/djangoapp/dealer/<id>` | GET | Retrieve dealer details by ID |
 | `/djangoapp/reviews/dealer/<id>` | GET | Retrieve reviews for a dealer |
 | `/djangoapp/add_review` | POST | Post a review for a dealer |
-| `/djangoapp/analyze_review_sentiments` | POST | Analyze review sentiment |
+| `/djangoapp/analyze_review` | POST | Run sentiment analysis on review text |
+| `/djangoapp/get_cars` | GET | Retrieve all car makes and models |
 
-## Deployment
-The application is containerized with Docker and deployed to **IBM Cloud Code Engine** via a GitHub Actions CI/CD pipeline. The deployed application URL is stored in the `deploymentURL` file in the repository root.
+## 🔄 CI/CD
 
-## Author
-Capstone project completed as part of the **IBM Full Stack Application Development Capstone Project** course on Coursera / IBM Skills Network.
+The repository includes a GitHub Actions workflow (`.github/workflows/server.yml`)
+that automatically builds, tests, and deploys the Django application to IBM Cloud
+Code Engine on every push to the `main` branch.
+
+## 👤 Author
+
+Capstone project completed for the IBM Full Stack Application Development
+Professional Certificate.
