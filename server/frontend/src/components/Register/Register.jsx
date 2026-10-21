@@ -1,75 +1,58 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import "./Register.css";
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import './Register.css';
 
 const Register = () => {
   const navigate = useNavigate();
-  const djangoHost =
-    process.env.REACT_APP_DJANGO_HOST || "http://localhost:8000";
 
   const [formData, setFormData] = useState({
-    username: "",
-    first_name: "",
-    last_name: "",
-    email: "",
-    password: "",
+    username: '',
+    first_name: '',
+    last_name: '',
+    email: '',
+    password: ''
   });
 
-  const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  const { username, first_name, last_name, email, password } = formData;
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorMessage("");
-    setSuccessMessage("");
-    setLoading(true);
+    setErrorMessage('');
 
     try {
-      const response = await fetch(`${djangoHost}/djangoapp/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username,
-          first_name,
-          last_name,
-          email,
-          password,
-        }),
-      });
+      const response = await fetch(
+        'http://localhost:8000/djangoapp/register',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        }
+      );
 
       const data = await response.json();
 
-      if (response.status === 201 && data.status === "success") {
-        setSuccessMessage(
-          "Registration successful! Redirecting you to the login page..."
-        );
-        setTimeout(() => {
-          navigate("/login");
-        }, 1500);
-      } else if (data.status === "unavailable") {
-        setErrorMessage(
-          "The username you entered is already taken. Please choose a different username."
-        );
+      if (response.status === 201 && data.status === 'success') {
+        sessionStorage.setItem('username', data.username);
+        sessionStorage.setItem('auth', 'true');
+        navigate('/');
       } else {
         setErrorMessage(
-          data.error || "Registration failed. Please check your details and try again."
+          data.message || 'Registration failed. The username may already exist.'
         );
       }
     } catch (error) {
       setErrorMessage(
-        "Unable to connect to the server. Please make sure the Django backend is running."
+        'Unable to reach the server. Please make sure the Django server is running.'
       );
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -78,17 +61,12 @@ const Register = () => {
       <div className="register-card">
         <h1 className="register-title">Sign Up</h1>
         <p className="register-subtitle">
-          Create your Best Cars Dealership account to review dealers
+          Create your DriveNow account to review dealerships
         </p>
 
         {errorMessage && (
-          <div className="alert alert-error" role="alert">
+          <div className="register-error" role="alert">
             {errorMessage}
-          </div>
-        )}
-        {successMessage && (
-          <div className="alert alert-success" role="alert">
-            {successMessage}
           </div>
         )}
 
@@ -99,9 +77,9 @@ const Register = () => {
               type="text"
               id="username"
               name="username"
-              value={username}
+              value={formData.username}
               onChange={handleChange}
-              placeholder="Enter your username"
+              placeholder="Enter a username"
               required
             />
           </div>
@@ -112,7 +90,7 @@ const Register = () => {
               type="text"
               id="first_name"
               name="first_name"
-              value={first_name}
+              value={formData.first_name}
               onChange={handleChange}
               placeholder="Enter your first name"
               required
@@ -125,7 +103,7 @@ const Register = () => {
               type="text"
               id="last_name"
               name="last_name"
-              value={last_name}
+              value={formData.last_name}
               onChange={handleChange}
               placeholder="Enter your last name"
               required
@@ -138,7 +116,7 @@ const Register = () => {
               type="email"
               id="email"
               name="email"
-              value={email}
+              value={formData.email}
               onChange={handleChange}
               placeholder="Enter your email address"
               required
@@ -151,20 +129,20 @@ const Register = () => {
               type="password"
               id="password"
               name="password"
-              value={password}
+              value={formData.password}
               onChange={handleChange}
-              placeholder="Enter your password"
-              minLength="6"
+              placeholder="Enter a password"
+              minLength="8"
               required
             />
           </div>
 
-          <button type="submit" className="register-button" disabled={loading}>
-            {loading ? "Registering..." : "Register"}
+          <button type="submit" className="register-button">
+            Register
           </button>
         </form>
 
-        <p className="login-link">
+        <p className="register-footer">
           Already have an account? <Link to="/login">Login here</Link>
         </p>
       </div>
